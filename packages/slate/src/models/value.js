@@ -806,8 +806,11 @@ class Value extends Record(DEFAULTS) {
       document: this.document.toJSON(options),
     }
 
-    if (options.preserveData) {
-      object.data = this.data.toJSON(options)
+    if (options.preserveData || options.preserveState) {
+      if (options.preserveState)
+        object.data = this.data.toJS(options)
+      else
+        object.data = this.data.toJSON(options)
     }
 
     if (options.preserveDecorations) {
