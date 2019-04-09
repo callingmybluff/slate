@@ -1,5 +1,6 @@
 import isPlainObject from 'is-plain-object'
-import { Map } from 'immutable'
+import { Map, Seq } from 'immutable'
+import Operation from './operation.js'
 
 /**
  * Data.
@@ -44,10 +45,30 @@ class Data {
   }
 
   /**
-   * Alias `fromJS`.
+   * Create a `Data` from a JSON `object`.
+   *
+   * @param {Object} object
+   * @return {Data}
    */
 
-  static fromJS = Data.fromJSON
+  static fromJS(object) {
+    return typeof object !== 'object' || object === null ? object :
+      Seq(object).map(Data.propertyFromJS).toMap()
+  }
+
+  /**
+   * Create `Data`'s property from a JSON `object`.
+   *
+   * @param {Object} object
+   * @return {Data}
+   */
+
+  static propertyFromJS(object) {
+    return typeof object !== 'object' || object === null ? object :
+    Array.isArray(object) ? 
+      Seq(object).map(Data.propertyFromJS).toList() :
+      Operation.fromJSON(object);
+  }
 }
 
 /**

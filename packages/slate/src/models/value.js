@@ -89,9 +89,13 @@ class Value extends Record(DEFAULTS) {
 
   static fromJSON(object, options = {}) {
     let { data = {}, decorations = [], document = {}, selection = {} } = object
-    data = Data.fromJSON(data)
+    if (options.preserveState)
+      data = Data.fromJS(data)
+    else
+      data = Data.fromJSON(data)
     document = Document.fromJSON(document)
     selection = document.createSelection(selection)
+    console.log(selection)
     decorations = List(decorations.map(d => Decoration.fromJSON(d)))
 
     if (selection.isUnset) {

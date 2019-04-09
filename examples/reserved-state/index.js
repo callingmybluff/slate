@@ -87,9 +87,9 @@ class ReservedState extends React.Component {
       // result contains loaded file.
       var json = JSON.parse( loadedEvent.target.result );
       this.setState({
-        value: Value.fromJSON(json)
+        value: Value.fromJSON(json, {preserveState: true, preserveSelection: true})
       });
-      console.log(json);
+      console.log(this.state.value.data.get('undos'));
     }
     reader.onload = loadFunction.bind(this);
     reader.readAsText(event.target.files[0]);
@@ -98,7 +98,7 @@ class ReservedState extends React.Component {
   writeFile = ( ) => {
     var filename = 'state.json';
     //var json = JSON.stringify( this.state.value.toJSON({ reserveState: true }) );
-    var json = JSON.stringify( this.state.value.toJSON() );
+    var json = JSON.stringify( this.state.value.toJSON({preserveState: true, preserveSelection: true}) );
 
     var element = document.createElement('a');
     element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(json));
@@ -110,7 +110,6 @@ class ReservedState extends React.Component {
     element.click();
 
     document.body.removeChild(element);
-    console.log("Should be saved");
   }
 
   /**
